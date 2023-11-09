@@ -65,7 +65,7 @@ class Graph {
 
       if (!seen.has(current)) {
         seen.add(current);
-        results.push(current);
+        results.push(current.value);
 
         for (let neighbor of current.adjacent) {
           if (!seen.has(neighbor)) {
@@ -79,10 +79,56 @@ class Graph {
   }
 
   /** traverse graph with BDS and returns array of Node values */
-  breadthFirstSearch(start) { }
+  breadthFirstSearch(start) {
+    let results = [];
+    let queue = [start];
+    let seen = new Set();
+
+    while (queue.length) {
+      let current = queue.shift();
+
+      if (!seen.has(current)) {
+        seen.add(current);
+        results.push(current.value);
+
+        for (let neighbor of current.adjacent) {
+          if (!seen.has(neighbor)) {
+            queue.push(neighbor);
+          }
+        }
+      }
+    }
+    return results;
+  }
 
   /** find the distance of the shortest path from the start node to the end node */
-  distanceOfShortestPath(start, end) { }
+  distanceOfShortestPath(start, end) {
+    let queue = [start];
+    let seen = new Set();
+    let level = 1;
+
+    while (queue.length) {
+      let queueLength = queue.length;
+
+      for (let i = 0; i < queueLength; i++) {
+        let current = queue.shift();
+        if (current === end) return level - 1;
+
+        if (!seen.has(current)) {
+          seen.add(current);
+
+          for (let neighbor of current.adjacent) {
+            if (!seen.has(neighbor)) {
+              queue.push(neighbor);
+            }
+          }
+        }
+
+      }
+      level++;
+    }
+  };
+
 }
 
 module.exports = { Graph, Node };
